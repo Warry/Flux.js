@@ -183,7 +183,7 @@ function Flux(first) {
 		}
 	}
 
-	return Wrapper([]);
+	return Wrapper(first);
 }
 function When(ƒ) {
 	return Flux([]).then(ƒ);
@@ -239,6 +239,9 @@ function Event(ƒ) {
 }
 
 // Async[ position of value , position of next ]
+function Async01(ƒ, f1, f2) {	return Action(function(value,next){ ƒ.call(this, next, f1, f2) }) }
+function Async02(ƒ, f1, f2) {	return Action(function(value,next){ ƒ.call(this, f1, next, f2) }) }
+function Async03(ƒ, f1, f2) {	return Action(function(value,next){ ƒ.call(this, f1, f2, next) }) }
 function Async12(ƒ, f1, f2) {	return Action(function(value,next){ ƒ.call(this, value, next, f1, f2) }) }
 function Async13(ƒ, f1, f2) {	return Action(function(value,next){ ƒ.call(this, value, f1, next, f2) }) }
 function Async14(ƒ, f1, f2) {	return Action(function(value,next){ ƒ.call(this, value, f1, f2, next) }) }
@@ -252,11 +255,13 @@ function Async41(ƒ, f1, f2) {	return Action(function(value,next){ ƒ.call(this,
 function Async42(ƒ, f1, f2) {	return Action(function(value,next){ ƒ.call(this, f1, next, f2, value) }) }
 function Async43(ƒ, f1, f2) {	return Action(function(value,next){ ƒ.call(this, f1, f2, next, value) }) }
 
+function Call0(ƒ, f1, f2, f3) {	return Call(function(value){ ƒ.call(this, f1, f2, f3) }) }
 function Call1(ƒ, f1, f2, f3) {	return Call(function(value){ ƒ.call(this, value, f1, f2, f3) }) }
 function Call2(ƒ, f1, f2, f3) {	return Call(function(value){ ƒ.call(this, f1, value, f2, f3) }) }
 function Call3(ƒ, f1, f2, f3) {	return Call(function(value){ ƒ.call(this, f1, f2, value, f3) }) }
 function Call4(ƒ, f1, f2, f3) {	return Call(function(value){ ƒ.call(this, f1, f2, f3, value) }) }
 
+function Effect0(ƒ, f1, f2, f3) {	return Effect(function(value){ ƒ.call(this, f1, f2, f3) }) }
 function Effect1(ƒ, f1, f2, f3) {	return Effect(function(value){ ƒ.call(this, value, f1, f2, f3) }) }
 function Effect2(ƒ, f1, f2, f3) {	return Effect(function(value){ ƒ.call(this, f1, value, f2, f3) }) }
 function Effect3(ƒ, f1, f2, f3) {	return Effect(function(value){ ƒ.call(this, f1, f2, value, f3) }) }
@@ -283,6 +288,13 @@ Flux.merge = function(self, forced) {
 Flux.tuple = function(self, forced) {
 	return function(passed){
 		return self([forced, passed]);
+	}
+}
+
+// Concat function result array with forced array
+Flux.concat = function(self, forced) {
+	return function(passed){
+		return self(forced.concat(passed));
 	}
 }
 

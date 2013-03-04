@@ -37,13 +37,27 @@
 					for (i in allProperties) {
 						properties[i] = allProperties[i];
 					}
-				} else {
-					return properties;
 				}
+				return properties;
 			}
 
 			shell.set = function(key, value) {
-				properties[key] = value;
+				if (isFunction(model[key])) {
+					properties[key] = model[key]( value );
+				} else {
+					properties[key] = value;
+				}
+				return shell;
+			}
+
+			shell.reset = function(key, value) {
+				if (isFunction(model[key])) {
+					properties[key] = model[key]();
+				} else if (model[key]) {
+					properties[key] = model[key];
+				} else {
+					properties[key] = undefined;
+				}
 				return shell;
 			}
 

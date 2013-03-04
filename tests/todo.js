@@ -21,23 +21,26 @@ function View(options) {
 
 var App = View({
 	el: $("#app"),
+	form: $("form", this.el),
 	list: $("#list"),
-	value: $(".input", this.el),
-	clearButton: $(".clear", this.el),
+	counter: $("#list"),
+	todoInput: $(".todoInput", this.el),
+	clearButton: $("#clear", this.el),
 	error: $(".error", this.el),
 	cleanUI: Effect(function() {
-		this.value.val("");
+		this.todoInput.val("");
 		this.error.text("").hide();
-		this.el.find(".title").focus();
 	}),
 	onError: function(e) {
 		this.error.text(e).show();
 	},
 	submit: Event(function(n) {
-		$("form", this.el).submit(function(e) {
+		var self = this;
+		this.todoInput.focus();
+		$("form", this.el).on("submit",function(e) {
 			e.preventDefault();
 			n({
-				title: $("form", this.el).find(".title").val()
+				title: self.todoInput.val()
 			});
 			return false;
 		});
@@ -62,6 +65,9 @@ var App = View({
 	}),
 	clearCompleted: Event(function(n) {
 		this.clearButton.click(n);
+	}),
+	updateCounter: Effect(function(v) {
+		this.counter.text( v.length );
 	})
 });
 
