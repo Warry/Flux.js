@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+<script src="../src/flux.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+
+var page = function(url) {
+  return {
+    url: url
+  }
+}
+
+var fetchPage = Async(function(page, next) {
+  page.isProcessing = true;
+  setTimeout(function() {
+    console.log("page downloaded")
+    page.html = "<p>HTML</p>";
+    next(page);
+  }, 500);
+});
+
+var savePage = Async(function(page, next) {
+  setTimeout(function() {
+    page.isTodo = false;
+    console.log("page saved")
+    next(page);
+  }, 130);
+});
+
+var parseLinks = Async(function(page, next) {
+  Flux().await([1,2,3,4].map(pushTodo)).then(next)();
+});
+
+var pushTodo = function(link) {
+  return function(page, next) {
+    setTimeout(function() {
+      console.log("link found");
+      next(link);
+    }, 50);
+  }
+}
+
+
+var popTodo = Async(function(none, next) {
+  setTimeout(function() {
+    next(page("link added to the todo list"));
+  }, 100);
+});
+
+
+var processPage = Do(popTodo).then(fetchPage).await(savePage, parseLinks)
+
+
+var lol = processPage.then(function(results, next) {
+  console.log("everything is done!");
+  console.log("here is the page:", results[0]);
+  console.log("here are the links:", results[1]);
+  next();
+})
+
+lol('')
+
+
+
+
+</script>
+</body>
+</html>
